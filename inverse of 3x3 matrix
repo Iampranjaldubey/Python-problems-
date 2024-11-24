@@ -1,0 +1,50 @@
+def determinant_3x3(matrix):
+    # calculating determinant
+    # I have used indices to access the elemens of the matrix
+    det = (matrix[0][0]*(matrix[1][1]*matrix[2][2]-matrix[1][2]*matrix[2][1])-
+           matrix[0][1]*(matrix[1][0]*matrix[2][2]-matrix[1][2]*matrix[2][0])+
+           matrix[0][2]*(matrix[1][0]*matrix[2][1]-matrix[1][1]*matrix[2][0]))
+    return det
+
+def minors_3x3(matrix):
+    # calculating minor for matrix
+    minor_matrix=([(matrix[1][1]*matrix[2][2]-matrix[1][2]*matrix[2][1]),  #minor for a11
+                   (matrix[1][0]*matrix[2][2]-matrix[1][2]*matrix[2][0]),  #minor for a12
+                   (matrix[1][0]*matrix[2][1]-matrix[1][1]*matrix[2][0])],  #minor for a13
+                  [(matrix[0][1]*matrix[2][2]-matrix[0][2]*matrix[2][1]),  #minor for a21
+                   (matrix[0][0]*matrix[2][2]-matrix[0][2]*matrix[2][0]),  #minor for a22
+                   (matrix[0][0]*matrix[2][1]-matrix[0][1]*matrix[2][0])],  #minor for a23
+                  [(matrix[0][1]*matrix[1][2]-matrix[0][2]*matrix[1][1]),  #minor for a31
+                   (matrix[0][0]*matrix[1][2]-matrix[0][2]*matrix[1][0]),  #minor for a32
+                   (matrix[0][0]*matrix[1][1]-matrix[0][1]*matrix[1][0])]  #minor for a33
+                )
+    return minor_matrix
+def fliping_sign(matrix):
+    #fliping the sign of elements of matrix (used to find cofactor from minor)
+    cofactors_matrix=([matrix[0][0],-matrix[0][1],matrix[0][2]],
+                     [-matrix[1][0],matrix[1][1],-matrix[1][2]],
+                     [matrix[2][0],-matrix[2][1],matrix[2][2]])
+    return cofactors_matrix
+
+def transpose(matrix):
+    #finding transpose of matrix(used to find adjoint from cofactors) 
+    adjoint_matrix=([matrix[0][0],matrix[1][0],matrix[2][0]],  # fliping rows to column 
+                     [matrix[0][1],matrix[1][1],matrix[2][1]],
+                     [matrix[0][2],matrix[1][2],matrix[2][2]])
+    return adjoint_matrix
+
+def inverse_3x3(matrix):
+    det_matrix=determinant_3x3(matrix)
+    if det_matrix==0:
+        return "matrix is not invertible"
+    minor_matrix=minors_3x3(matrix)
+    cofactor_matrix=fliping_sign(minor_matrix)
+    adjoint_matrix=transpose(cofactor_matrix)
+    inverted_matrix=[]
+    for i in range(3):
+        rows=[]
+        for j in range (3):
+            value=adjoint_matrix[i][j]/det_matrix
+            rows.append(value)
+        inverted_matrix.append(rows)
+    return inverted_matrix
